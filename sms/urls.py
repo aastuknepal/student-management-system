@@ -21,6 +21,7 @@ from rest_framework.routers import DefaultRouter
 from teacher.views import TeacherSerializer, TeacherViewset
 from student.views import StudentSerializer, StudentViewset
 from course.views import CourseSerializer, CourseViewset
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 router = DefaultRouter()
 
@@ -36,5 +37,14 @@ urlpatterns = [
     #frontend Template Routes
 
     path('add-teacher/', TemplateView.as_view(template_name='add_teacher.html'), name='add_teacher'),
+
+    # 1. This generates the raw JSON blueprint of your API
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    
+    # 2. Swagger UI: The interactive, playable documentation
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    
+    # 3. Redoc: A cleaner, read-only version of the documentation
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ]

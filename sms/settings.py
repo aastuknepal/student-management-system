@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     #other services
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
 
 
     #other installed apps
@@ -137,5 +138,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5
+    'PAGE_SIZE': 5,
+
+    'DEFAULT_SCHEMA_CLASS' : 'drf_spectacular.openapi.AutoSchema',
     }
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SMS Project API',
+    'DESCRIPTION': 'Official documentation for the School Management System endpoints.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
