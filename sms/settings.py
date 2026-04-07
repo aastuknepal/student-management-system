@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     #other services
     'rest_framework',
+    'django_filters',
 
 
     #other installed apps

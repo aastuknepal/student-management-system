@@ -6,9 +6,18 @@ from django.db import models
 class Teacher(models.Model):
 
 
+    DEPARTMNT_CHOICES = [
+        ('cs', 'Computer Science'),
+        ('math', 'Mathematics'),
+        ('physics', 'Physics'),
+        ('bio', 'Biology'),
+        ('Mlt', 'Multiple')
+    ]
+
+
     name = models.CharField(max_length = 100)
     email = models.EmailField(unique=True)
-    department = models.CharField(max_length=100, null=True)
+    department = models.CharField(max_length=100,choices=   DEPARTMNT_CHOICES, default='Mlt')
     date_of_joining = models.DateField()
 
     description = models.TextField(blank=True, null=True)
