@@ -9,7 +9,7 @@ class Student(models.Model):
         ('F', 'Female'),
     ]
 
-
+    gender = models.CharField(max_length=10, choices= GENDER_CHOICES, blank=True, null=True)
     name = models.CharField(max_length=100)
     roll_number = models.CharField(max_length=20, unique=True)
     email = models.EmailField(unique=True, blank=True, null=True)
@@ -23,7 +23,9 @@ class Student(models.Model):
 
 
     enrollment_date = models.DateField(auto_now_add=True)
-    course = models.ManyToManyField('course.Course', related_name='student', blank=True)  #
+    course = models.ManyToManyField('course.Course', related_name='student', blank=True)  
+
+    is_deleted=models.BooleanField(default=False)
 
 
     def __str__(self):

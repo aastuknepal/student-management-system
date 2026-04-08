@@ -145,8 +145,8 @@ REST_FRAMEWORK = {
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'SMS Project API',
-    'DESCRIPTION': 'Official documentation for the School Management System endpoints.',
+    'TITLE': 'Student Management Syster SMS(DRF) Project API',
+    'DESCRIPTION': 'Documentation for the School Management System endpoints.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }

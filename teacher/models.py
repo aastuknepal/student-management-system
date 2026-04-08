@@ -22,6 +22,9 @@ class Teacher(models.Model):
 
     description = models.TextField(blank=True, null=True)
 
+    is_deleted=models.BooleanField(default=False)
+
+
 
 
     def __str__(self):

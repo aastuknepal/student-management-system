@@ -12,7 +12,16 @@ class Course(models.Model):
 
     #academic Details
 
-    department = models.CharField(max_length=100, blank=True, null=True)
+    DEPARTMNT_CHOICES = [
+        ('cs', 'Computer Science'),
+        ('math', 'Mathematics'),
+        ('physics', 'Physics'),
+        ('bio', 'Biology'),
+        ('Mlt', 'Multiple')
+    ]
+
+
+    department = models.CharField(max_length=100,choices=DEPARTMNT_CHOICES, blank=True, null=True)
     credits = models.PositiveIntegerField(default=3, help_text="Number of credit hours")
     semester = models.PositiveIntegerField(blank=True, null=True, help_text="Semester :1, 2, 3...")
 
@@ -37,6 +46,10 @@ class Course(models.Model):
     # It means if you have a Teacher object, you can easily find all courses they teach by querying teacher_instance.assigned_courses.all().
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    #S
+    is_deleted=models.BooleanField(default=False)
+
 
 
     def __str__(self):
