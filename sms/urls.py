@@ -47,7 +47,6 @@ router.register(r'courses', CourseViewset, basename='course')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/', include('student.urls')),
 
 
 
