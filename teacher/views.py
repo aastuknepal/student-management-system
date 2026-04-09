@@ -4,6 +4,7 @@ from .serializers import TeacherSerializer
 from rest_framework import viewsets, filters, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from sms.permissions import TeacherAccessPermission
 
 
 # Create your views here.
@@ -11,6 +12,7 @@ from rest_framework.response import Response
 class TeacherViewset(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
+    permission_classes = [TeacherAccessPermission]
 
 
 

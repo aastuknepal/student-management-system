@@ -22,8 +22,22 @@ from teacher.views import TeacherSerializer, TeacherViewset
 from student.views import StudentSerializer, StudentViewset
 from course.views import CourseSerializer, CourseViewset
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView, 
+    TokenRefreshView,
+    
+)
+from .views import RegisterView
+
+
+
+
+
+
+
 
 router = DefaultRouter()
+
 
 router.register(r'teachers', TeacherViewset, basename='teacher')
 router.register(r'students', StudentViewset, basename='student')
@@ -33,6 +47,15 @@ router.register(r'courses', CourseViewset, basename='course')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/', include('student.urls')),
+
+
+
+    #Global Authentication Endpoints
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair' ),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/register', RegisterView.as_view(), name='register'),
+
 
     #frontend Template Routes
 
@@ -48,3 +71,4 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
 ]
+

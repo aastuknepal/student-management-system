@@ -17,13 +17,25 @@ class Course(models.Model):
         ('math', 'Mathematics'),
         ('physics', 'Physics'),
         ('bio', 'Biology'),
-        ('Mlt', 'Multiple')
+        
+    ]
+
+    SEMESTER_CHOICES = [
+       ('1', 'First'),
+        ('2', 'Second'),
+        ('3', 'Third'),
+        ('4', 'Fourth'),
+         ('5', 'Fifth'),
+        ('6', 'Sixth'),
+        ('7', 'Seventh'),
+        ('9', 'Eighth'),
+        
     ]
 
 
     department = models.CharField(max_length=100,choices=DEPARTMNT_CHOICES, blank=True, null=True)
     credits = models.PositiveIntegerField(default=3, help_text="Number of credit hours")
-    semester = models.PositiveIntegerField(blank=True, null=True, help_text="Semester :1, 2, 3...")
+    semester = models.CharField(blank=True, null=True, choices=SEMESTER_CHOICES, )
 
 
     #Relationships

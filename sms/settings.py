@@ -141,7 +141,29 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
 
     'DEFAULT_SCHEMA_CLASS' : 'drf_spectacular.openapi.AutoSchema',
+
+
+    'DEFAULT_AUTHENTICATION_CLASSES' :(
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        #Optional to kep sessionauthentication so that we can still login via DRF web app
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES' : [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
     }
+
+
+
+#This is to set how long the token last, while by default it is 5  minutes
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 
 SPECTACULAR_SETTINGS = {

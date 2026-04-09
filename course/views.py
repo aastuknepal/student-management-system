@@ -3,12 +3,14 @@ from .models import Course
 from .serializers import CourseSerializer
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from sms.permissions import CourseAccessPermission
 
 # Create your views here.
 
 class CourseViewset(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    permission_classes = [CourseAccessPermission]
 
 
     def destroy(self, request, *args, **kwargs):
