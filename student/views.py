@@ -4,10 +4,14 @@ from .serializers import StudentSerializer, StudentRestrictedSerializer
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-# This is only to lock user from viewing the student page its commented because global lock is applied which requires to login to view any student or teacher or course
-# from rest_framework.permissions import IsAuthenticated
-# from .serializers import RegisterSerializer
+''' This is only to lock user from viewing the student page its commented because global lock is applied which requires to login to view any student or teacher or course
+ from rest_framework.permissions import IsAuthenticated
+ from .serializers import RegisterSerializer'''
+
 from django.contrib.auth.models import User
+
+
+
 from rest_framework.permissions import AllowAny
 from sms.permissions import StudentAccessPermission
 

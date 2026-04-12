@@ -20,8 +20,12 @@ class CourseAccessPermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
 
             #Students, Teachers, and Admins can view Courses
+            '''
+            #This is to let only authenticated people view the course details now as i decided to let anyone even not authenticated users
+            #see the course summary im changing this line of code to be true always and in view i'll set which serializers to use when user is logged in and when not
             return request.user.is_authenticated
-        
+        '''
+            return True
         # Only admins can add /edit/delete Course
         return is_admin(request.user)
     
@@ -39,7 +43,7 @@ class TeacherAccessPermission(permissions.BasePermission):
 class StudentAccessPermission(permissions.BasePermission):
     def has_permission(self, request, view):
 
-        # Teachers and Admin can view students but student cannot view all students
+        # Teachers and Admin can view students but student cannot view all students so the Restricted student serializer is made for the studnet
 
         if request.method in permissions.SAFE_METHODS:
             return is_teacher(request.user) or is_admin(request.user) or is_student(request.user)

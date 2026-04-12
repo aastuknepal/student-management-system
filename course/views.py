@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Course
-from .serializers import CourseSerializer
+from .serializers import CourseSerializer, CourseSummarySerializer
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from sms.permissions import CourseAccessPermission
@@ -11,6 +11,19 @@ class CourseViewset(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [CourseAccessPermission]
+
+
+      # This method dynamically choses which serializer to use 
+    def get_serializer_class(self):
+        user = self.request.user
+
+        # If the user is authenticated it users course serializer, which has full information of coursre
+        if user.is_authenticated:
+            return CourseSerializer
+        
+        # Otherwise if they are not authenticated the course summary serializer will be showm which has limited information
+        return CourseSummarySerializer
+         
 
 
     def destroy(self, request, *args, **kwargs):
