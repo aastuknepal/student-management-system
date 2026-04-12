@@ -27,7 +27,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     
 )
-from .views import RegisterView
+from .views import RegisterView, LogoutView
 
 
 
@@ -53,8 +53,10 @@ urlpatterns = [
     #Global Authentication Endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair' ),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    
     path('api/register/', RegisterView.as_view(), name='register'),
-
+    path('api/logout/', LogoutView.as_view(), name='logout'),
 
     #frontend Template Routes
 
