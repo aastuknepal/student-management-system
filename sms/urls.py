@@ -62,7 +62,7 @@ urlpatterns = [
 
     path('add-teacher/', TemplateView.as_view(template_name='add_teacher.html'), name='add_teacher'),
 
-    # 1. This generates the raw JSON blueprint of your API
+    # 1. This generates the raw JSON blueprint of  API
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     
     # 2. Swagger UI: The interactive, playable documentation
