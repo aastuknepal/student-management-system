@@ -72,3 +72,148 @@ erDiagram
         datetime created_at
         boolean is_deleted
     }
+```
+
+---
+
+## 🛠️ Tech Stack
+
+*   **Backend Framework**: Django 5.2.12
+*   **API Toolkit**: Django REST Framework (DRF) 3.17.1
+*   **Task Queue (Background Workers)**: Celery 5.6.3
+*   **Message Broker**: Redis 8.0.0
+*   **Image Processing**: Pillow 12.2.0
+*   **API Spec/Documentation**: drf-spectacular 0.29.0 (OpenAPI 3.0, Swagger UI, Redoc)
+*   **Containerization**: Docker & Docker Compose
+*   **Database**: SQLite (default, easily switchable to PostgreSQL/MySQL)
+
+---
+
+## 🐳 Quick Start with Docker (Recommended)
+
+To run the entire system (Django, Celery, and Redis) with a single command:
+
+### 1. Start Containers
+Navigate to your project root folder and run:
+```bash
+docker-compose up --build
+```
+This builds your Django and Celery containers and pulls Redis. Once complete:
+*   **Django Web Server** will run at [http://localhost:8000/](http://localhost:8000/)
+*   **Redis** will run at port `6379`
+*   **Celery Worker** runs in the background, listening for new uploads to compress.
+
+### 2. Apply Migrations (inside container)
+In a new terminal window, run:
+```bash
+docker-compose exec web python manage.py migrate
+```
+
+### 3. Create a Superuser
+```bash
+docker-compose exec web python manage.py createsuperuser
+```
+
+---
+
+## 🛠️ Alternative Local Setup (Without Docker)
+
+### 1. Run local Redis Server
+Make sure you have Redis installed and running locally on port `6379` (e.g. running via WSL or Docker Desktop).
+
+### 2. Activate Virtual Environment
+*   **Windows (PowerShell)**:
+    ```powershell
+    .venv\Scripts\Activate.ps1
+    ```
+*   **macOS / Linux**:
+    ```bash
+    source .venv/bin/activate
+    ```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run Migrations & Start Django Server
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+The server will start running at `http://127.0.0.1:8000/`.
+
+### 5. Run Celery Worker (In a separate terminal)
+Activate your virtual environment and start the worker. On Windows, use the `--pool=solo` flag:
+```bash
+celery -A sms worker --loglevel=info --pool=solo
+```
+
+---
+
+## 🔑 Role & Serializer Permissions Matrix
+
+| Entity | Role / Group | Permitted HTTP Methods | Serializer Used | Info Disclosed |
+| :--- | :--- | :--- | :--- | :--- |
+| **Student** | Admin | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` | `StudentSerializer` | Full student profile & course info |
+| | Teacher | `GET` (List & Detail) | `StudentSerializer` | Full student profile & course info |
+| | Student | `GET` (List & Detail) | `StudentRestrictedSerializer` | Limited (ID, Name, Gender, Semester, Courses) |
+| **Teacher** | Admin | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` | `TeacherSerializer` | Full teacher profile details |
+| | Teacher | `GET` | `TeacherSerializer` | Full teacher profile details |
+| | Student | `GET` | `TeacherSerializer` | Full teacher profile details |
+| **Course** | Admin | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` | `CourseSerializer` | Full details, credits, and teacher |
+| | Authenticated | `GET` | `CourseSerializer` | Full details, credits, and teacher |
+| | Unauthenticated| `GET` | `CourseSummarySerializer`| Limited (Title, Department, Teacher Summary) |
+
+---
+
+## 📡 API Endpoints Reference
+
+### 🔐 Authentication & Accounts
+
+| Endpoint | Method | Permission | Description |
+| :--- | :--- | :--- | :--- |
+| `/api/register/` | `POST` | Open / Admin* | Create a new user account. *Admins can assign roles. |
+| `/api/token/` | `POST` | AllowAny | Authenticate credentials and receive Access & Refresh JWTs. |
+| `/api/token/refresh/`| `POST` | AllowAny | Submit a valid Refresh Token to obtain a new Access Token. |
+| `/api/logout/` | `POST` | IsAuthenticated | Log out the user and blacklist their Refresh Token. |
+
+### 🎓 Academic & Profiles (CRUD)
+
+| Endpoint | Method | Permission | Description |
+| :--- | :--- | :--- | :--- |
+| `/api/students/` | `GET` | Authenticated | List all active (non-deleted) students (Serializer varies by role). |
+| `/api/students/` | `POST` | Admin | Register/Create a student profile. |
+| `/api/students/{id}/`| `GET`/`PUT`/`PATCH` | Role-based | View details or update student profile details. |
+| `/api/students/{id}/`| `DELETE` | Admin | Soft delete the student record (`is_deleted=True`). |
+| `/api/teachers/` | `GET` | Authenticated | List/search all active teachers (supports `search` query parameter). |
+| `/api/teachers/` | `POST` | Admin | Create a teacher profile. |
+| `/api/teachers/{id}/`| `GET`/`PUT`/`PATCH`| Role-based | View details or update teacher profile details. |
+| `/api/teachers/{id}/`| `DELETE` | Admin | Soft delete the teacher record (`is_deleted=True`). |
+| `/api/courses/` | `GET` | AllowAny | List courses (Detailed for authenticated; Summary for anonymous). |
+| `/api/courses/` | `POST` | Admin | Create a course. |
+| `/api/courses/{id}/` | `DELETE` | Admin | Soft delete the course record (`is_deleted=True`). |
+
+### 📖 API Documentation
+
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/api/schema/` | `GET` | Downloads/views the raw OpenAPI 3.0 JSON schema. |
+| `/api/docs/` | `GET` | Fully interactive Swagger UI playground to run and test API endpoints. |
+| `/api/redoc/` | `GET` | Redoc visual interface—ideal for clean, nested, read-only schema viewing. |
+
+---
+
+## 🧪 Testing & API Interaction Guide
+
+### Interactive Swagger UI
+Open your browser and navigate to:
+👉 **[http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/)**
+
+From here, you can click **"Authorize"**, input your Bearer token, and test out all CRUD routes directly in your browser.
+
+### Creating Roles (Django Admin Panel)
+For RBAC custom permissions to function correctly:
+1. Log in to the Django Admin at `http://127.0.0.1:8000/admin/`.
+2. Under **Authentication and Authorization**, create three groups: `Admin`, `Teacher`, and `Student`.
+3. Create standard users and assign them to their respective groups.
