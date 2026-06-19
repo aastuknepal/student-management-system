@@ -26,6 +26,7 @@ class Student(models.Model):
     course = models.ManyToManyField('course.Course', related_name='student', blank=True)  
 
     is_deleted=models.BooleanField(default=False)
+    photo = models.ImageField(upload_to='student_photos/', blank=True, null=True)
 
 
     def __str__(self):
